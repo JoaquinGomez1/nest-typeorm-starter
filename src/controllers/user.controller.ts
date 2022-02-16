@@ -1,7 +1,16 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Req,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
+import { Request, Response } from 'express';
 import UserLoginModel from 'src/domain/models/user-login.model';
 import UserRegisterModel from 'src/domain/models/user-register.model';
-import UserModel from 'src/domain/models/user.model';
 import { UserService } from 'src/services/user.service';
 
 @Controller('users')
@@ -23,6 +32,8 @@ export class UserController {
 
   @Post('/register')
   async register(@Body() data: UserRegisterModel) {
-    return this._userService.register(data);
+    const appResponse = await this._userService.register(data);
+
+    return appResponse;
   }
 }

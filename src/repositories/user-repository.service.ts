@@ -20,6 +20,9 @@ export class UserRepositoryService {
 
   async getByEmail(email: string) {
     const data = await this.userRepository.findOne({ email });
+
+    if (!data) return null;
+
     const model = new UserModel();
 
     return Object.assign(data, model) as UserModel;
@@ -33,7 +36,7 @@ export class UserRepositoryService {
   }
 
   async insert(user: UserModel) {
-    const entity = this.userRepository.create(user as any)[0];
+    const entity = this.userRepository.create(user as any);
     await this.userRepository.save(entity);
 
     return Object.assign(user, entity);

@@ -6,7 +6,7 @@ import {
   Entity,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { hash } from 'bcrypt';
+import bcrypt, { hash } from 'bcrypt';
 
 @Entity('users')
 export class User {
@@ -47,5 +47,9 @@ export class User {
   async encryptPassword() {
     if (!this.password) return;
     this.password = await hash(this.password, 10);
+  }
+
+  async validatePassword(password: string): Promise<boolean> {
+    return bcrypt.compareSync(password, this.password);
   }
 }

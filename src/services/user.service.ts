@@ -11,7 +11,6 @@ export class UserService implements IUserService {
   userRepository: UserRepositoryService;
   constructor(userRepository: UserRepositoryService) {
     this.userRepository = userRepository;
-    console.log({ PP: Object.getOwnPropertyNames(userRepository) });
   }
 
   async login(model: UserLoginModel) {
@@ -26,10 +25,10 @@ export class UserService implements IUserService {
     const response = new AppResponse<UserModel>();
     const userData = await this.userRepository.getByEmail(user.email);
 
-    if (!userData) throw new NotFoundException('User does not exists');
+    if (userData) throw new NotFoundException('User already exists');
 
     const userModel = new UserModel();
-    const mappedUser: UserModel = Object.assign(userModel, userData);
+    const mappedUser: UserModel = Object.assign(userModel, user);
     const createdUser = await this.userRepository.insert(mappedUser);
     delete createdUser.password;
 
